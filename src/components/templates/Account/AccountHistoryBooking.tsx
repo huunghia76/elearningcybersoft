@@ -10,10 +10,10 @@ export const AccountHistoryBooking = () => {
 
 
    useEffect(() => {
-      const thongTinDatVe = dispatch(getUserByAccessTokenThunk())
+      const chiTietKhoaHocGhiDanh = dispatch(getUserByAccessTokenThunk())
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      thongTinDatVe.then((res: any) => {
-         setInfoTiket(res.payload.thongTinDatVe);
+      chiTietKhoaHocGhiDanh.then((res: any) => {
+         setInfoTiket(res.payload.chiTietKhoaHocGhiDanh);
       }).catch(err => {
          return handleError(err)
       })

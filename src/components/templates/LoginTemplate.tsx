@@ -35,7 +35,6 @@ export const LoginTemplate = () => {
             navigate("/");
          })
          .catch((err) => {
-            console.log("err: ", err);
             return handleError(err);
          });
    };

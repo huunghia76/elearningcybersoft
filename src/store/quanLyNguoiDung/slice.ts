@@ -5,7 +5,7 @@ import { getAccessToken } from "utils";
 
 type QuanLyNguoiDungInitialState = {
    accessToken?: string;
-   userLogin?: UserLogin | UserByAccessToken;
+   userLogin?: UserLogin | UserByAccessToken ;
    userUpdate?: UpdateUser;
    isFetchingLogin?: boolean;
    isUpdatingUser: boolean;
@@ -37,12 +37,12 @@ const quanLyNguoiDungSlice = createSlice({
          })
          .addCase(loginThunk.fulfilled, (state, { payload }) => {
             localStorage.setItem("ACCESSTOKEN", payload?.accessToken);
-            state.accessToken = payload.accessToken;
+            state.accessToken = payload?.accessToken;
             state.userLogin = payload;
             state.isFetchingLogin = false;
          })
          .addCase(getUserByAccessTokenThunk.fulfilled, (state, { payload }) => {
-            state.userLogin = payload;
+            state.userLogin = payload ;
          })
          .addCase(UpdateAccountThunk.fulfilled, (state, { payload }) => {
             state.userUpdate = payload;

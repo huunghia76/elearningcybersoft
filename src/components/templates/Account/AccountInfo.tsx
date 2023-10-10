@@ -26,7 +26,7 @@ export const AccountInfo = () => {
    useEffect(() => {
       reset({
          ...user,
-         soDt: user?.soDT,
+         soDT: user?.soDT,
       });
    }, [user, reset]);
 
@@ -68,8 +68,8 @@ export const AccountInfo = () => {
          <Inputs
             className="[&>label]:text-black [&>input]:bg-transparent [&>input]:border [&>input]:border-black [&>input]:text-black"
             label="Số điện thoại"
-            name="soDt"
-            error={errors?.soDt?.message}
+            name="soDT"
+            error={errors?.soDT?.message}
             register={register}
          />
          <Inputs

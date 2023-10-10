@@ -15,10 +15,11 @@ export const quanLyNguoiDungServices = {
    register: (data: RegisterSchemaType) => api.post("/DangKy", data),
 
    login: (data: LoginSchematype) =>
-      api.post<ApiResponse<UserLogin>>("/DangNhap", data),
+      api.post<UserLogin>("/DangNhap", data),
 
    getUserByAccessToken: () =>
-      api.post<ApiResponse<UserByAccessToken>>("/ThongTinTaiKhoan"),
+      api.post<UserByAccessToken>("/ThongTinTaiKhoan"),
+      
    updateAccount: (value: UpdateUser) =>
       api.put<ApiResponse<UpdateUserResponse>>(
          "/CapNhatThongTinNguoiDung",

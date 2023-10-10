@@ -1,22 +1,19 @@
 export type UserLogin = {
-   taiKhoan: string;
-   hoTen: string;
-   email: string;
-   soDT: string;
-   maNhom: string;
-   maLoaiNguoiDung: "GV" | "HV";
-   accessToken: string;
+   taiKhoan: string,
+   hoTen: string,
+   email: string,
+   soDT: string,
+   maNhom: string,
+   maLoaiNguoiDung: "GV" | "HV",
+   accessToken: string,
 };
 export type UserByAccessToken = Omit<UserLogin, "accessToken"> & {
-   thongTinDatVe?: [];
-   loaiNguoiDung: {
-      maLoaiNguoiDung: "GV" | "HV";
-   };
+   chiTietKhoaHocGhiDanh?: [] | undefined;
 };
 export type UpdateUser = {
    taiKhoan: string;
    email: string;
-   soDt: string;
+   soDT: string;
    maNhom: string;
    maLoaiNguoiDung: string;
    hoTen: string;
@@ -24,7 +21,7 @@ export type UpdateUser = {
 export type UpdateUserResponse = UpdateUser & {
    soDT?: string;
    loaiNguoiDung: string;
-   thongTinDatVe:
+   chiTietKhoaHocGhiDanh:
    | {
       maPhim: string;
       rap: string;

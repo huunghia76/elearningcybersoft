@@ -1,0 +1,8 @@
+.tabsAntd{
+    margin: 10px 70px !important;
+ }
+ @media screen and (max-width: 780px){
+    .tabsAntd{
+       margin: 10px 10px !important;
+    }
+ }

@@ -1,0 +1,17 @@
+.Card {
+  width: 22%;
+  margin: 10px !important;
+}
+
+@media screen and (max-width: 760px) {
+  .Card {
+    width: 46%;
+    padding: 10px !important;
+  }
+}
+@media screen and (max-width: 460px) {
+  .Card {
+    width: 100%;
+    padding: 10px !important;
+  }
+}

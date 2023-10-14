@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { rootReducer } from "./rootReducer";
 import { useDispatch } from "react-redux";
-import { getUserByAccessTokenThunk } from "./quanLyNguoiDung";
+import {  getUserByAccessTokenThunk } from "./quanLyNguoiDung";
 
 export const store = configureStore({
   reducer: rootReducer,

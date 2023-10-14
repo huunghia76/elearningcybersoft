@@ -40,8 +40,9 @@ export const UpdateAccountThunk = createAsyncThunk(
    async (payload: UpdateUser, { rejectWithValue }) => {
       try {
          const data = await quanLyNguoiDungServices.updateAccount(payload);
+         console.log("data ưer: ", data.data);
          await sleep(1000);
-         return data.data.content;
+         return data.data;
       } catch (err) {
          return rejectWithValue(err);
       }

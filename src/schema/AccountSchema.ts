@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const AccountSchema = z.object({
    taiKhoan: z.string().nonempty("Vui lòng nhập tài khoản"),
+   matKhau: z.string().nonempty("Vui lòng nhập Mật Khẩu"),
    hoTen: z.string().nonempty("Vui lòng nhập họ tên"),
    email: z
       .string()

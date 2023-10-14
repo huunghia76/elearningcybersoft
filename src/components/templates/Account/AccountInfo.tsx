@@ -10,6 +10,7 @@ import { handleError } from "utils";
 import { toast } from "react-toastify";
 import { quanLyNguoiDungServices } from "services";
 import { getUserByAccessTokenThunk } from 'store/quanLyNguoiDung/thunk';
+import { UpdateUser } from "types";
 
 export const AccountInfo = () => {
    const { user } = useAuth();
@@ -31,15 +32,16 @@ export const AccountInfo = () => {
    }, [user, reset]);
 
    const onSubmit: SubmitHandler<AccountSchemaType> = async (values) => {
-      try {
-         await quanLyNguoiDungServices.updateAccount(values)
-         toast.success("Cập nhật thành công!");
-
-         dispatch(getUserByAccessTokenThunk());
-      } catch (errors) {
-         return handleError(errors);
+      if (values.taiKhoan) {
+         try {
+            await quanLyNguoiDungServices.updateAccount(values as UpdateUser)
+            toast.success("Cập nhật thành công!");
+            dispatch(getUserByAccessTokenThunk());
+         } catch (errors) {
+            return handleError(errors);
+         } 
       }
-      
+
    };
    return (
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -49,6 +51,13 @@ export const AccountInfo = () => {
             label="Tài khoản"
             name="taiKhoan"
             error={errors?.taiKhoan?.message}
+            register={register}
+         />
+         <Inputs
+            className="[&>label]:text-black [&>input]:bg-transparent [&>input]:border [&>input]:border-black [&>input]: text-black"
+            label="Mật Khẩu"
+            name="matKhau"
+            error={errors?.matKhau?.message}
             register={register}
          />
          <Inputs

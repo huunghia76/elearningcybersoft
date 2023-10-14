@@ -1,7 +1,7 @@
 import { Carousel } from "antd";
 
 
-function Banner() {
+export const Banner = () => {
    const bannerList = [
       { hinhAnh: "./images/banner1.jpg" },
       { hinhAnh: "./images/banner2.jpg" },

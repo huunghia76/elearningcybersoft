@@ -11,6 +11,7 @@ type InputProps = {
    placeholder?: string;
    className?: string;
    name?: string ;
+   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 export const Input = ({
    label,
@@ -21,6 +22,7 @@ export const Input = ({
    placeholder,
    className = "",
    name,
+   onChange,
 }: InputProps) => {
    return (
       <div className={className}>
@@ -35,6 +37,7 @@ export const Input = ({
             type={type}
             className="p-10 mt-8 w-full text-white rounded-6 bg-[#333]"
             {...register?.(name ? name : "")}
+            onChange={onChange}
          />
          {!!error && <p className="text-red-500 text-14">{error}</p>}
       </div>

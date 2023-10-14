@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Avatar, Popover } from "antd";
 import { useAuth } from "hooks";
 import { useAppDispatch } from "store";
-import { Button } from ".";
+import { Button, Input } from ".";
 import { quanLyNguoiDungActions } from "store/quanLyNguoiDung";
 import { PATH } from "constant";
 import classNames from "classnames";
@@ -14,7 +14,9 @@ export const Header = () => {
    const { accessToken, user } = useAuth();
    const dispatch = useAppDispatch();
    const [scroll, setSecroll] = useState<boolean>(false);
+   const [inputSearch, setInputSearch] = useState<string>();
 
+  
    const handleScroll = () => {
       if (window.pageYOffset > 50) {
          setSecroll(true);
@@ -45,20 +47,33 @@ export const Header = () => {
          >
             <nav className={`${styles.navbar}`}>
                <h1 className="brand font-700">
-                  <span className="text-[var(--primary-color)] ">CYBER</span>MOVIE
+                  <span className="text-[var(--primary-color)] ">CYBER</span>ACADEMY
                </h1>
-
+               <div className="flex">
+                  <Input id="search" placeholder="Tìm kiếm tên khóa học" 
+                     onChange={(e)=>{
+                        setInputSearch(e.target.value);
+                     }} ></Input>
+                  <Button className="!h-[100%] mt-[9px] !py-[10px] !px-[15px] "
+                     onClick={() => {
+                        // let searchInput = 
+                        navigate(PATH.search + `?tenKhoaHoc=${inputSearch}`)
+                     }}
+                  >
+                     <i className="fa-solid fa-magnifying-glass"></i>
+                  </Button>
+               </div>
                <ul className={`${styles.navMenu} ${isActive ? styles.active : ""}`}>
                   <NavLink className="font-600 tracking-[.10em] p-4" to="/">
-                     LỊCH CHIẾU
+                     Khóa Học
                   </NavLink>
                   <NavLink className="font-600 tracking-[.10em] p-4" to="/">
-                     PHIM
+                     Link
                   </NavLink>
                   <NavLink className="font-600 tracking-[.10em] p-4" to="/">
-                     RẠP
+                     Link
                   </NavLink>
-                  <NavLink className="font-600 tracking-[.10em] p-4" to="/Contact">
+                  <NavLink className="font-600 tracking-[.10em] p-4" to="/client/Contact">
                      CONTACT
                   </NavLink>
                   <div>

@@ -21,7 +21,7 @@ export const quanLyNguoiDungServices = {
       api.post<UserByAccessToken>("/ThongTinTaiKhoan"),
       
    updateAccount: (value: UpdateUser) =>
-      api.put<ApiResponse<UpdateUserResponse>>(
+      api.put<UpdateUserResponse>(
          "/CapNhatThongTinNguoiDung",
          value
       ),

@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export const HomeTemplate = () => {
-  return (
-    <div>HomeTemplate</div>
-  )
-}
+  return <div>HomeTemplate</div>;
+};

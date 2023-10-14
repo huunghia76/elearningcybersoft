@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "store";
 import { getBannerList } from "store/quanLyBanner";
 
-function Banner() {
+export const Banner = ()=> {
   const dispatch = useAppDispatch();
   const { bannerList } = useSelector((state: RootState) => state.quanLyBanner);
 

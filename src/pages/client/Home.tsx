@@ -1,6 +1,6 @@
-import { HomeTemplate } from "components/templates/client";
+import { HomeTemplate } from "components";
 
 
 export const Home = () => {
-   return <HomeTemplate />;
+  return <HomeTemplate />;
 };

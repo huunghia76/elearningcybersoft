@@ -4,4 +4,6 @@ export const PATH = {
    account: "/client/account",
    contact: "/client/contact",
    admin: "/admin",
+   courseDetail: "/course-detail",
+   search: "/timkiemkhoahoc",
 };

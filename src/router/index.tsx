@@ -1,6 +1,6 @@
 import { RouteObject } from "react-router-dom";
 import { PATH } from "constant";
-import { AuthLayout, MainLayoutAdmin, MainLayoutClient, } from "components";
+import { AuthLayout, CourseDetail, MainLayoutAdmin, MainLayoutClient, SearchCourse, } from "components";
 import { Account, Login, Register, Contact, Home, HomeAdmin } from "pages";
 
 export const router: RouteObject[] = [
@@ -19,6 +19,14 @@ export const router: RouteObject[] = [
          {
             path: PATH.contact,
             element: <Contact />,
+         },
+         {
+            path: PATH.courseDetail,
+            element: <CourseDetail />,
+         },
+         {
+            path: PATH.search,
+            element: <SearchCourse />,
          },
       ],
    },

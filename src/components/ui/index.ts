@@ -9,3 +9,4 @@ export * from "./Skeleton";
 export * from "./Tabs";
 export * from "./Banner";
 export * from "./SimpleMap"
+export * from "./client"

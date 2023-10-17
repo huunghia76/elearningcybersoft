@@ -3,7 +3,7 @@ import { DangKyKhoaHoc } from "types";
 import { CategoryCourse, Course } from "types/QuanLyKhoaHoc";
 
 const api = apiInstance({
-   baseURL: import.meta.env.VITE_QUAN_LY_KHOA_HOC_API,
+  baseURL: import.meta.env.VITE_QUAN_LY_KHOA_HOC_API,
 });
 
 export const khoaHocServices = {

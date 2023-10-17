@@ -10,7 +10,8 @@ type InputProps = {
    error?: string;
    placeholder?: string;
    className?: string;
-   name?: string ;
+   classNameLabel?: string;
+   name?: string;
    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 export const Input = ({
@@ -21,13 +22,14 @@ export const Input = ({
    error,
    placeholder,
    className = "",
+   classNameLabel = "",
    name,
    onChange,
 }: InputProps) => {
    return (
       <div className={className}>
          {!!label && (
-            <label className="text-white" htmlFor={id}>
+            <label className={`text-white ` + classNameLabel} htmlFor={id}>
                {label}
             </label>
          )}

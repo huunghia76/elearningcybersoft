@@ -44,7 +44,7 @@ export const AccountInfo = () => {
 
    };
    return (
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form className="p-3" onSubmit={handleSubmit(onSubmit)}>
          <p className="text-20 font-600">Thông tin tài khoản</p>
          <Inputs
             className="[&>label]:text-black [&>input]:bg-transparent [&>input]:border [&>input]:border-black [&>input]: text-black"

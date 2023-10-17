@@ -2,24 +2,26 @@ import { Breadcrumb, Col, Divider, Row } from "antd"
 import { Button } from "components"
 import { useAuth } from "hooks"
 import { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { khoaHocServices } from "services"
 import { Course } from "types/QuanLyKhoaHoc"
-import { handleError } from "utils"
+import { getAccessToken, handleError, sleep } from "utils"
 import { toast } from 'react-toastify';
+import { PATH } from "constant"
 
 export const CourseDetail = () => {
    const { user } = useAuth()
    const location = useLocation();
    const query = new URLSearchParams(location.search);
    const maKhoaHoc = query.get("maKhoaHoc");
-
+   const navigate = useNavigate()
    const dataDangKy = {
       maKhoaHoc,
       taiKhoan: user?.taiKhoan
    }
    const [course, setCourse] = useState<Course>()
    const fetchData = async () => {
+
       try {
          const data = await khoaHocServices.getKhoaHocById(maKhoaHoc);
          const dataCourse = data.data;
@@ -28,6 +30,8 @@ export const CourseDetail = () => {
       } catch (err) {
          return handleError(err);
       }
+
+
    }
    useEffect(() => {
       fetchData()
@@ -64,11 +68,18 @@ export const CourseDetail = () => {
                </h2>
                <Button type="primary" className="!mt-[15px] !p-3 !h-[42px] !w-[100px]"
                   onClick={async () => {
-                     try {
-                        await khoaHocServices.dangKyKhoaHoc(dataDangKy)
-                        toast.success("Đăng ký thành công")
-                     } catch (error) {
-                        return handleError(error)
+                     const token = getAccessToken()
+                     if (token) {
+                        try {
+                           await khoaHocServices.dangKyKhoaHoc(dataDangKy)
+                           toast.success("Đăng ký thành công")
+                        } catch (error) {
+                           return handleError(error)
+                        }
+                     } else {
+                        toast.warning("Đăng nhập để đăng ký !")
+                       await sleep(1000)
+                        navigate(PATH.login)
                      }
                   }}
                >Đăng ký</Button>

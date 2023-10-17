@@ -1,5 +1,6 @@
 export type UserLogin = {
    taiKhoan: string;
+   matKhau: string;
    hoTen: string;
    email: string;
    soDT: string;

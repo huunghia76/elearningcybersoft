@@ -14,17 +14,22 @@ export const Header = () => {
    const { accessToken, user } = useAuth();
    const dispatch = useAppDispatch();
    const [scroll, setSecroll] = useState<boolean>(false);
-   const [inputSearch, setInputSearch] = useState<string>();
+   const [inputSearch, setInputSearch] = useState<string>("");
 
-  
+
    const handleScroll = () => {
-      if (window.pageYOffset > 50) {
+      if (window.pageYOffset > 100) {
          setSecroll(true);
          return;
       }
       setSecroll(false);
    };
-
+   const scrollToTop = () => {
+      window.scrollTo({
+         top: 0,
+         behavior: "smooth" // Thêm hiệu ứng cuộn mượt
+      });
+   };
    useEffect(() => {
       window.addEventListener("scroll", handleScroll);
       return () => {
@@ -50,8 +55,8 @@ export const Header = () => {
                   <span className="text-[var(--primary-color)] ">CYBER</span>ACADEMY
                </h1>
                <div className="flex">
-                  <Input id="search" placeholder="Tìm kiếm tên khóa học" 
-                     onChange={(e)=>{
+                  <Input id="search" placeholder="Tìm kiếm tên khóa học"
+                     onChange={(e) => {
                         setInputSearch(e.target.value);
                      }} ></Input>
                   <Button className="!h-[100%] mt-[9px] !py-[10px] !px-[15px] "
@@ -148,6 +153,8 @@ export const Header = () => {
                </div>
             </nav>
          </header>
+         {scroll ? <div className="fixed bottom-5 right-5 bg-yellow-500 px-[20px] py-[15px] cursor-pointer rounded-10" onClick={scrollToTop}><i className="fa-solid fa-arrow-up text-white"></i></div> : ""}
+
       </div>
    );
 };

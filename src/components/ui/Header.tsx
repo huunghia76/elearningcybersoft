@@ -5,7 +5,7 @@ import { Avatar, Popover } from "antd";
 import { useAuth } from "hooks";
 import { useAppDispatch } from "store";
 import { Button, Input } from ".";
-import { quanLyNguoiDungActions } from "store/quanLyNguoiDung";
+import { getUserByAccessTokenThunk, quanLyNguoiDungActions } from "store/quanLyNguoiDung";
 import { PATH } from "constant";
 import classNames from "classnames";
 
@@ -16,7 +16,6 @@ export const Header = () => {
    const [scroll, setSecroll] = useState<boolean>(false);
    const [inputSearch, setInputSearch] = useState<string>();
 
-  
    const handleScroll = () => {
       if (window.pageYOffset > 50) {
          setSecroll(true);
@@ -26,11 +25,12 @@ export const Header = () => {
    };
 
    useEffect(() => {
+      dispatch(getUserByAccessTokenThunk())
       window.addEventListener("scroll", handleScroll);
       return () => {
          window.removeEventListener("scroll", handleScroll);
       };
-   }, []);
+   }, [accessToken]);
 
    const [isActive, setIsActive] = useState(false);
 
@@ -50,14 +50,18 @@ export const Header = () => {
                   <span className="text-[var(--primary-color)] ">CYBER</span>ACADEMY
                </h1>
                <div className="flex">
-                  <Input id="search" placeholder="Tìm kiếm tên khóa học" 
-                     onChange={(e)=>{
+                  <Input
+                     id="search"
+                     placeholder="Tìm kiếm tên khóa học"
+                     onChange={(e) => {
                         setInputSearch(e.target.value);
-                     }} ></Input>
-                  <Button className="!h-[100%] mt-[9px] !py-[10px] !px-[15px] "
+                     }}
+                  ></Input>
+                  <Button
+                     className="!h-[100%] mt-[9px] !py-[10px] !px-[15px] "
                      onClick={() => {
-                        // let searchInput = 
-                        navigate(PATH.search + `?tenKhoaHoc=${inputSearch}`)
+                        // let searchInput =
+                        navigate(PATH.search + `?tenKhoaHoc=${inputSearch}`);
                      }}
                   >
                      <i className="fa-solid fa-magnifying-glass"></i>
@@ -73,7 +77,10 @@ export const Header = () => {
                   <NavLink className="font-600 tracking-[.10em] p-4" to="/">
                      Link
                   </NavLink>
-                  <NavLink className="font-600 tracking-[.10em] p-4" to="/client/Contact">
+                  <NavLink
+                     className="font-600 tracking-[.10em] p-4"
+                     to="/client/Contact"
+                  >
                      CONTACT
                   </NavLink>
                   <div>
@@ -112,11 +119,9 @@ export const Header = () => {
                                     className="!h-[46px]"
                                     type="primary"
                                     onClick={() => {
-                                       dispatch(quanLyNguoiDungActions.logOut())
-                                       navigate('/');
-                                    }
-
-                                    }
+                                       dispatch(quanLyNguoiDungActions.logOut());
+                                       navigate("/");
+                                    }}
                                  >
                                     <i className="fa-solid fa-arrow-right-from-bracket text-16"></i>
                                     <span className="ml-10 font-500 text-16">

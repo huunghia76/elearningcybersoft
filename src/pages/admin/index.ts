@@ -1,2 +1,1 @@
-export * from "./ListUser"
-export * from "./HomeAdmin"
+export * from "./QuanLyNguoiDung";

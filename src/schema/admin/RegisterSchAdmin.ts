@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const RegisterSchema = z.object({
+export const RegisterSchAdmin = z.object({
   taiKhoan: z
     .string()
     .trim()
@@ -15,6 +15,7 @@ export const RegisterSchema = z.object({
     .string()
     .nonempty("Vui lòng nhập email")
     .email("Vui lòng nhập đúng email"),
+  maLoaiNguoiDung: z.string().nonempty("Vui lòng nhập mã nhóm"),
 });
 
-export type RegisterSchemaType = z.infer<typeof RegisterSchema>;
+export type RegisterSchAdminType = z.infer<typeof RegisterSchAdmin>;

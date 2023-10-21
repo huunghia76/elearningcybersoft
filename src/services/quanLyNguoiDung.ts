@@ -3,7 +3,7 @@ import {
   LoginSchematype,
   RegisterSchAdminType,
   RegisterSchemaType,
-  UpdateUserAdminType,
+  // UpdateUserAdminType,
 } from "schema";
 import {
   UpdateUser,
@@ -30,4 +30,11 @@ export const quanLyNguoiDungServices = {
   getUsers: () => api.get<UserAdmin[]>("/LayDanhSachNguoiDung?MaNhom=GP01"),
 
   addUser: (data: RegisterSchAdminType) => api.put("/ThemNguoiDung", data),
+
+  getUser: (data) => api.get<UserAdmin[]>(`/TimKiemNguoiDung?tuKhoa=${data}`),
+
+  deleteUser: (value) => api.delete<string>(`/XoaNguoiDung?TaiKhoan=${value}`),
+
+  updateUser: (value) =>
+    api.put<UpdateUser>("/CapNhatThongTinNguoiDung", value),
 };

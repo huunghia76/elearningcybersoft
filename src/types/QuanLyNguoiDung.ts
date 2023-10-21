@@ -58,3 +58,7 @@ export type AddUser = {
   maNhom: "string";
   email: "string";
 };
+export type AdminGhidanh = {
+  taiKhoan: string;
+  hoTen: string;
+};

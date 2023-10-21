@@ -1,12 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Col, Row, Select } from "antd";
 import { Input } from "components";
-import React from "react";
+import React, { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { RegisterSchAdmin, RegisterSchAdminType } from "schema";
 import { quanLyNguoiDungServices } from "services";
+import { UserAdmin } from "types";
 import { handleError } from "utils";
 
 const options = [
@@ -22,17 +23,60 @@ export const AddUserForm: React.FC = () => {
     // getValues,
     watch,
     reset,
+    setValue,
+    getValues,
     formState: { errors },
   } = useForm<RegisterSchAdminType>({
     mode: "onChange",
     resolver: zodResolver(RegisterSchAdmin),
   });
 
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const taiKhoan = query.get("taiKhoan");
+
+  useEffect(() => {
+    if (taiKhoan) {
+      handleGetUser()
+    }
+  }, [])
+
+
+
+  const handleGetUser = async () => {
+    try {
+      const resp = await quanLyNguoiDungServices.getUser(taiKhoan)
+      const dataUsers: UserAdmin = resp.data[0];
+
+      setValue("taiKhoan", dataUsers["taiKhoan"])
+      setValue("matKhau", dataUsers["matKhau"])
+      setValue("soDT", dataUsers["soDt"])
+      setValue("maLoaiNguoiDung", dataUsers["maLoaiNguoiDung"])
+      setValue("hoTen", dataUsers["hoTen"])
+      setValue("email", dataUsers["email"])
+      setValue("maNhom", "GP01")
+
+      console.log({ resp, dataUsers });
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  // let defaultValues = taiKhoan ? {
+  //   taiKhoan: 
+  // } : {}
+
   const onSubmit: SubmitHandler<RegisterSchAdminType> = async (values) => {
     try {
-      await quanLyNguoiDungServices.addUser(values);
-      toast.success("Đăng ký thành công!");
-      reset();
+      if (!taiKhoan) {
+        await quanLyNguoiDungServices.addUser(values);
+        toast.success("Đăng ký thành công!");
+        reset();
+      } else {
+        await quanLyNguoiDungServices.updateUser(values);
+        toast.success("Cập nhật thành công!");
+      }
+
     } catch (err) {
       return handleError(err);
     }
@@ -52,16 +96,29 @@ export const AddUserForm: React.FC = () => {
       <form className="text-white" onSubmit={handleSubmit(onSubmit)}>
         <Row>
           <Col span={10} style={{ marginLeft: "40px" }}>
-            <Input
-              className="mt-16"
-              classNameLabel="!text-black"
-              label="Tài khoản"
-              placeholder="Tài khoản"
-              id="taiKhoan"
-              name="taiKhoan"
-              error={errors?.taiKhoan?.message}
-              register={register}
-            />
+            {taiKhoan ?
+              <div className={"mt-16"}>
+                <label className={`text-white ` + "!text-black"} htmlFor={"taiKhoan"}>
+                  Tài khoản
+                </label>
+                <input
+                  placeholder={"Tài khoản"}
+                  className="p-10 mt-8 w-full text-white rounded-6 bg-[#333]"
+                  value={getValues("taiKhoan")}
+                />
+              </div>
+              :
+              <Input
+                className="mt-16"
+                classNameLabel="!text-black"
+                label="Tài khoản"
+                placeholder="Tài khoản"
+                id="taiKhoan"
+                name="taiKhoan"
+                error={errors?.taiKhoan?.message}
+                register={register}
+              />}
+
           </Col>
           <Col span={10} style={{ marginLeft: "40px" }}>
             <Input
@@ -169,13 +226,30 @@ export const AddUserForm: React.FC = () => {
             /> */}
           </Col>
           <Col span={10} style={{ marginLeft: "80px", marginTop: "10px" }}>
-            <Button
-              className="!w-[150px] !h-[40px] !mt-30 !font-400"
-              htmlType="submit"
-              type="primary"
-            >
-              Thêm
-            </Button>
+            <Row>
+              {
+                !taiKhoan ? <Col span={4}>
+                  <Button
+                    className="!w-[80px] !h-[40px] !mt-30 !font-400"
+                    htmlType="submit"
+                    type="primary"
+                  >
+                    Thêm
+                  </Button>
+                </Col>
+                  :
+                  <Col span={4}>
+                    <Button
+                      className="!w-[80px] !h-[40px] !mt-30 !font-400"
+                      htmlType="submit"
+                      type="primary"
+                      style={{ marginLeft: "40px" }}
+                    >
+                      Lưu
+                    </Button>
+                  </Col>
+              }
+            </Row>
           </Col>
         </Row>
       </form>

@@ -1,4 +1,4 @@
-import { Button, Col, Input, Modal, Row, Space, Table, Tag, theme } from "antd";
+import { Button, Col, Input, Modal, Row, Select, Space, Table, Tag, theme } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
@@ -7,7 +7,11 @@ import { toast } from 'react-toastify';
 import { khoaHocServices, quanLyNguoiDungServices } from "services";
 import { UserAdmin, khoaHoc } from "types";
 import { handleError } from "utils";
+import { Controller, useForm } from 'react-hook-form';
 
+type searchCourse = {
+  search: string
+}
 
 export const QuanLyNguoiDungAdmin = () => {
   const {
@@ -24,6 +28,13 @@ export const QuanLyNguoiDungAdmin = () => {
 
   const [courses, setGetCourse] = useState<khoaHoc[]>([])
   const [coursesRegisted, setCoursesRegisted] = useState<khoaHoc[]>([])
+
+  const {
+    control,
+    watch,
+  } = useForm<searchCourse>({
+    mode: "onChange",
+  });
 
   useEffect(() => {
     getUserList();
@@ -83,12 +94,30 @@ export const QuanLyNguoiDungAdmin = () => {
   };
 
   const handleConfirmCourse = async (value) => {
-    console.log({ value });
     await khoaHocServices.ghiDanhKhoaHoc({
       maKhoaHoc: value?.maKhoaHoc,
       taiKhoan: isModalOpen.taiKhoan,
     })
+    await getCoursesRegisted()
+    toast.success("Ghi danh thành công")
+  }
 
+  const handleCancelCourse = async (value) => {
+    await khoaHocServices.huyGhiDanh({
+      maKhoaHoc: value?.maKhoaHoc,
+      taiKhoan: isModalOpen.taiKhoan,
+    })
+    await getCoursesRegisted()
+    toast.success("Hủy ghi danh thành công")
+  }
+
+  const handleRegisterCourse = async () => {
+    await khoaHocServices.ghiDanhKhoaHoc({
+      maKhoaHoc: watch("search"),
+      taiKhoan: isModalOpen.taiKhoan,
+    })
+    await getCoursesRegisted()
+    toast.success("Ghi danh thành công")
   }
 
   const columns: ColumnsType<UserAdmin> = [
@@ -152,13 +181,12 @@ export const QuanLyNguoiDungAdmin = () => {
         return <>
           <Space size="middle">
             <Tag color="success" style={{ cursor: "pointer" }} onClick={() => handleConfirmCourse(value)}>Xác thực</Tag>
-            <Tag color="warning" style={{ cursor: "pointer" }}>Hủy</Tag >
+            <Tag color="warning" style={{ cursor: "pointer" }} onClick={() => handleCancelCourse(value)}>Hủy</Tag >
           </Space >
         </>
       }
     }
   ]
-
 
   return (
 
@@ -198,11 +226,28 @@ export const QuanLyNguoiDungAdmin = () => {
       <Modal title="Chọn khóa học" open={isModalOpen.isOpen} onOk={handleOk} onCancel={handleCancel} >
         <Row>
           <Col span={18}>
-            <Input placeholder="Nhập tên khóa học"></Input>
+            <Controller
+              name="search"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  showSearch
+                  style={{ width: 350 }}
+                  placeholder="Search to Select"
+                  optionFilterProp="children"
+                  value={value}
+                  onChange={onChange}
+                  filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                  }
+                  options={courses.map(e => ({ value: e.maKhoaHoc, label: e.tenKhoaHoc }))}
+                />)}
+            />
           </Col>
           <Col span={1}></Col>
           <Col span={4}>
-            <Button>Ghi danh</Button>
+            <Button onClick={handleRegisterCourse}>Ghi danh</Button>
           </Col>
         </Row>
         <br />

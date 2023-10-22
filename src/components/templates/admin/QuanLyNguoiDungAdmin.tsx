@@ -4,7 +4,7 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
-import { quanLyNguoiDungServices } from "services";
+import { khoaHocServices, quanLyNguoiDungServices } from "services";
 import { UserAdmin, khoaHoc } from "types";
 import { handleError } from "utils";
 
@@ -42,7 +42,7 @@ export const QuanLyNguoiDungAdmin = () => {
   };
 
   const getCourses = async () => {
-    const layThongTinKhoaHoc = await quanLyNguoiDungServices.getKhoaHoc(isModalOpen?.taiKhoan);
+    const layThongTinKhoaHoc = await quanLyNguoiDungServices.getKhoaHoc({ taiKhoan: isModalOpen?.taiKhoan });
     const dataKhoaHoc: khoaHoc[] = layThongTinKhoaHoc.data;
     setGetCourse(dataKhoaHoc)
   }
@@ -84,7 +84,10 @@ export const QuanLyNguoiDungAdmin = () => {
 
   const handleConfirmCourse = async (value) => {
     console.log({ value });
-
+    await khoaHocServices.ghiDanhKhoaHoc({
+      maKhoaHoc: value?.maKhoaHoc,
+      taiKhoan: isModalOpen.taiKhoan,
+    })
 
   }
 

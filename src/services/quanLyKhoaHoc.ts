@@ -25,4 +25,6 @@ export const khoaHocServices = {
   dangKyKhoaHoc: (value) => api.post<DangKyKhoaHoc>(`/DangKyKhoaHoc`, value),
 
   huyGhiDanh: (value) => api.post<DangKyKhoaHoc>(`/HuyGhiDanh`, value),
+
+  ghiDanhKhoaHoc: (value) => api.post<DangKyKhoaHoc>(`/GhiDanhKhoaHoc`, value),
 };

@@ -39,7 +39,7 @@ export const quanLyNguoiDungServices = {
     api.put<UpdateUser>("/CapNhatThongTinNguoiDung", value),
 
   getKhoaHoc: (value: object) =>
-    api.post<khoaHoc[]>(`/LayDanhSachKhoaHocChuaGhiDanh?TaiKhoan=${value}`),
+    api.post<khoaHoc[]>(`/LayDanhSachKhoaHocChoXetDuyet`, value),
 
   getKhoaHocRegisted: (value: object) =>
     api.post<khoaHoc[]>(`/LayDanhSachKhoaHocDaXetDuyet`, value),

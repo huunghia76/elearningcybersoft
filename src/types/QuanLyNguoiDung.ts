@@ -62,3 +62,12 @@ export type AdminGhidanh = {
   taiKhoan: string;
   hoTen: string;
 };
+export type layTTKhoaHoc = {
+  taiKhoan: string;
+};
+
+export type khoaHoc = {
+  tenKhoaHoc: string;
+  biDanh: string;
+  maKhoaHoc: string;
+};

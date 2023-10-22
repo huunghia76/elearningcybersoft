@@ -3,7 +3,6 @@ import {
   LoginSchematype,
   RegisterSchAdminType,
   RegisterSchemaType,
-  // UpdateUserAdminType,
 } from "schema";
 import {
   UpdateUser,
@@ -11,6 +10,7 @@ import {
   UserAdmin,
   UserByAccessToken,
   UserLogin,
+  khoaHoc,
 } from "types";
 
 const api = apiInstance({
@@ -37,4 +37,10 @@ export const quanLyNguoiDungServices = {
 
   updateUser: (value) =>
     api.put<UpdateUser>("/CapNhatThongTinNguoiDung", value),
+
+  getKhoaHoc: (value: object) =>
+    api.post<khoaHoc[]>(`/LayDanhSachKhoaHocChoXetDuyet`, value),
+
+  getKhoaHocRegisted: (value: object) =>
+    api.post<khoaHoc[]>(`/LayDanhSachKhoaHocDaXetDuyet`, value),
 };

@@ -6,3 +6,47 @@
    --text-active: #7c0fd1;
    --text-hover: #FF4B91;
 }
+.ant-select-selector{
+   background: #333 !important;
+   color: rgb(255 255 255 / 1) !important;
+   font-weight: inherit !important;
+}
+.ant-select{
+   margin-top: 8px !important;
+}
+.ant-select-selection-item{
+   font-weight: 300 !important;
+   color: rgb(255 255 255 / .7) !important;
+   font-size: .9rem !important;
+
+}
+
+
+/* Tùy chỉnh thanh cuộn */
+::-webkit-scrollbar {
+   width: 10px; /* Độ rộng của thanh cuộn */
+}
+
+::-webkit-scrollbar-thumb {
+   background: #999999; /* Màu của con trỏ thanh cuộn */
+   border-radius: 6px; /* Bo tròn con trỏ */
+}
+
+::-webkit-scrollbar-thumb:hover {
+   background: #dadada; /* Màu khi hover con trỏ */
+}
+
+/* Ẩn thanh cuộn ngang */
+::-webkit-scrollbar-track {
+   display: none;
+}
+
+/* Tùy chỉnh thanh cuộn khi không hover */
+::-webkit-scrollbar-thumb:vertical {
+   background-color: #dadada;
+   border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:vertical:hover {
+   background-color: #999999;
+}

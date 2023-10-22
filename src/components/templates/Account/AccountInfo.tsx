@@ -39,7 +39,7 @@ export const AccountInfo = () => {
             dispatch(getUserByAccessTokenThunk());
          } catch (errors) {
             return handleError(errors);
-         } 
+         }
       }
 
    };

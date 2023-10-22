@@ -2,69 +2,69 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 export const Footer = () => {
-  return (
-    <Container className="mt-[100px] flex flex-col">
-      <img
-        className="w-full"
-        src="https://cinestar.com.vn/catalog/view/theme/default/images/line-bg.png"
-        alt="..."
-      />
-      <div className="footer-content">
-        <div className="social">
-          <NavLink to="https://www.facebook.com" target="_blank">
-            <i className="fa-brands fa-facebook"></i>
-          </NavLink>
-          <NavLink to="https://www.instagram.com" target="_blank">
-            <i className="fa-brands fa-instagram"></i>
-          </NavLink>
-          <NavLink to="https://www.twitter.com" target="_blank">
-            <i className="fa-brands fa-twitter"></i>
-          </NavLink>
-          <NavLink to="https://www.youtube.com" target="_blank">
-            <i className="fa-brands fa-youtube"></i>
-          </NavLink>
-        </div>
-        <div className="mt-[40px] flex gap-[100px] info flex-wrap">
-          <div>
-            <p className="font-700 text-20">
-              <span className="text-[var(--primary-color)]">CYBER</span>
-              MOVIE
-            </p>
-            <NavLink to="">Phim đang chiếu</NavLink>
-            <NavLink to="">Phim sắp chiếu</NavLink>
-            <NavLink to="">Lịch chiếu</NavLink>
-            <NavLink to="">Khuyến mãi</NavLink>
-          </div>
-          <div>
-            <p className="font-700 text-20">
-              <span>THÔNG TIN</span>
-            </p>
-            <NavLink to="">Giới thiệu</NavLink>
-            <NavLink to="">Tin tức</NavLink>
-            <NavLink to="">Hỏi đáp</NavLink>
-            <NavLink to="">Liên hệ</NavLink>
-          </div>
-          <div>
-            <p className="font-700 text-20">
-              <span>CHÍNH SÁCH VÀ QUY ĐỊNH</span>
-            </p>
-            <NavLink to="">Quy định chung</NavLink>
-            <NavLink to="">Điều khoản giao dịch</NavLink>
-            <NavLink to="">Chính sách bảo mật</NavLink>
-            <NavLink to="">Thông tin công ty</NavLink>
-          </div>
-          <div>
-            <p className="font-700 text-20">
-              <span>CHĂM SÓC KHÁCH HÀNG</span>
-            </p>
-            <p className="mt-16">Hotline: 1900 0000</p>
-            <p className="mt-16">Giờ làm việc: 8:00 - 22:00</p>
-            <p className="mt-16">Email hỗ trợ: cskh@gmail.com</p>
-          </div>
-        </div>
-      </div>
-    </Container>
-  );
+   return (
+      <Container className="mt-[100px] flex flex-col">
+         <img
+            className="w-full"
+            src="https://cinestar.com.vn/catalog/view/theme/default/images/line-bg.png"
+            alt="..."
+         />
+         <div className="footer-content">
+            <div className="social">
+               <NavLink to="https://www.facebook.com" target="_blank">
+                  <i className="fa-brands fa-facebook"></i>
+               </NavLink>
+               <NavLink to="https://www.instagram.com" target="_blank">
+                  <i className="fa-brands fa-instagram"></i>
+               </NavLink>
+               <NavLink to="https://www.twitter.com" target="_blank">
+                  <i className="fa-brands fa-twitter"></i>
+               </NavLink>
+               <NavLink to="https://www.youtube.com" target="_blank">
+                  <i className="fa-brands fa-youtube"></i>
+               </NavLink>
+            </div>
+            <div className="mt-[40px] flex gap-[100px] info flex-wrap">
+               <div>
+                  <p className="font-700 text-20">
+                     <span className="text-[var(--primary-color)]">CYBER</span>
+                     MOVIE
+                  </p>
+                  <NavLink to="">Phim đang chiếu</NavLink>
+                  <NavLink to="">Phim sắp chiếu</NavLink>
+                  <NavLink to="">Lịch chiếu</NavLink>
+                  <NavLink to="">Khuyến mãi</NavLink>
+               </div>
+               <div>
+                  <p className="font-700 text-20">
+                     <span>THÔNG TIN</span>
+                  </p>
+                  <NavLink to="">Giới thiệu</NavLink>
+                  <NavLink to="">Tin tức</NavLink>
+                  <NavLink to="">Hỏi đáp</NavLink>
+                  <NavLink to="">Liên hệ</NavLink>
+               </div>
+               <div>
+                  <p className="font-700 text-20">
+                     <span>CHÍNH SÁCH VÀ QUY ĐỊNH</span>
+                  </p>
+                  <NavLink to="">Quy định chung</NavLink>
+                  <NavLink to="">Điều khoản giao dịch</NavLink>
+                  <NavLink to="">Chính sách bảo mật</NavLink>
+                  <NavLink to="">Thông tin công ty</NavLink>
+               </div>
+               <div>
+                  <p className="font-700 text-20">
+                     <span>CHĂM SÓC KHÁCH HÀNG</span>
+                  </p>
+                  <p className="mt-16">Hotline: 1900 0000</p>
+                  <p className="mt-16">Giờ làm việc: 8:00 - 22:00</p>
+                  <p className="mt-16">Email hỗ trợ: cskh@gmail.com</p>
+               </div>
+            </div>
+         </div>
+      </Container>
+   );
 };
 
 const Container = styled.footer`

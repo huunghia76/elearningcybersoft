@@ -4,7 +4,7 @@ import { CategoryCourse, Course } from "types/QuanLyKhoaHoc";
 
 type QuanLyKhoaHocInitialState = {
    isFetchingKhoaHocList?: boolean;
-   khoaHocList?: Course[],
+   khoaHocList?: Course[] | [],
    DanhMucKhoaHocList?: CategoryCourse[] | [],
    // eslint-disable-next-line @typescript-eslint/no-explicit-any
    KhoaHocListByDanhMuc?: any,
@@ -13,13 +13,14 @@ type QuanLyKhoaHocInitialState = {
 };
 
 const initialState: QuanLyKhoaHocInitialState = {
-   
 };
 
 const quanLyKhoaHocSlice = createSlice({
    name: "quanLyKhoaHocs",
    initialState,
-   reducers: {},
+   reducers: {
+      
+   },
    extraReducers(builder) {
       builder
          //  khoa học

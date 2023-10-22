@@ -7,4 +7,5 @@ export const PATH = {
   courseDetail: "/course-detail",
   search: "/timkiemkhoahoc",
   userAdmin: "/quanlynguoidung",
+  courseAdmin: "/admin/course",
 };

@@ -25,7 +25,6 @@ export const AccountHistoryRegisterCourse = () => {
       // Hiển thị Toast Confirm
       toast.warn("Bạn có chắc chắn muốn hủy đăng ký khóa học này?", {
          position: "top-center",
-         // autoClose: false, // Tắt tự động đóng
          closeOnClick: false, // Tắt đóng khi click
          closeButton: (
             <button

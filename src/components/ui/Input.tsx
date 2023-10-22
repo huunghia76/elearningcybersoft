@@ -12,6 +12,7 @@ type InputProps = {
    className?: string;
    classNameLabel?: string;
    name?: string;
+   classNameInput?: string;
    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 export const Input = ({
@@ -24,6 +25,7 @@ export const Input = ({
    className = "",
    classNameLabel = "",
    name,
+   classNameInput,
    onChange,
 }: InputProps) => {
    return (
@@ -37,7 +39,7 @@ export const Input = ({
             id={id}
             placeholder={placeholder}
             type={type}
-            className="p-10 mt-8 w-full text-white rounded-6 bg-[#333]"
+            className={`p-10 mt-8 w-full text-white rounded-6 bg-[#333] ${classNameInput} `}
             {...register?.(name ? name : "")}
             onChange={onChange}
          />

@@ -124,6 +124,7 @@ export const QuanLyNguoiDungAdmin = () => {
       await getCourses()
       toast.success("Xác thực thành công")
     } catch (error) {
+      setLoadingTable(false)
       toast.error("Xác thực không thành công")
     }
 
@@ -138,8 +139,10 @@ export const QuanLyNguoiDungAdmin = () => {
         taiKhoan: isModalOpen.taiKhoan,
       })
       await getCoursesRegisted()
+      await getCourses()
       toast.success("Hủy thành công")
     } catch (error) {
+      setLoadingTable(false)
       toast.error("Hủy không thành công")
     }
 
@@ -155,6 +158,7 @@ export const QuanLyNguoiDungAdmin = () => {
       await getCourses()
       toast.success("Ghi danh thành công")
     } catch (error) {
+      setLoadingTable(false)
       toast.error("Ghi danh không thành công")
     }
 

@@ -27,7 +27,10 @@ export const QuanLyNguoiDungAdmin = () => {
   const dataUserList = userList?.filter(e => e.taiKhoan.toLowerCase().includes(searchUser?.toLowerCase()))
 
   const [courses, setGetCourse] = useState<khoaHoc[]>([])
+  const [coursesNotRegisted, setGetCourseNotRegisted] = useState<khoaHoc[]>([])
   const [coursesRegisted, setCoursesRegisted] = useState<khoaHoc[]>([])
+
+  const [loadingTable, setLoadingTable] = useState(false)
 
   const {
     control,
@@ -43,6 +46,7 @@ export const QuanLyNguoiDungAdmin = () => {
   useEffect(() => {
     getCourses()
     getCoursesRegisted()
+    getCoursesNotRegister()
   }, [isModalOpen.isOpen])
 
 
@@ -53,24 +57,34 @@ export const QuanLyNguoiDungAdmin = () => {
   };
 
   const getCourses = async () => {
-    const layThongTinKhoaHoc = await quanLyNguoiDungServices.getKhoaHoc({ taiKhoan: isModalOpen?.taiKhoan });
-    const dataKhoaHoc: khoaHoc[] = layThongTinKhoaHoc.data;
-    setGetCourse(dataKhoaHoc)
+    try {
+      const layThongTinKhoaHoc = await quanLyNguoiDungServices.getKhoaHoc({ taiKhoan: isModalOpen?.taiKhoan });
+      const dataKhoaHoc: khoaHoc[] = layThongTinKhoaHoc.data;
+      setGetCourse(dataKhoaHoc)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoadingTable(false)
+    }
+
   }
 
   const getCoursesRegisted = async () => {
-    const layThongTinKhoaHoc = await quanLyNguoiDungServices.getKhoaHocRegisted({ taiKhoan: isModalOpen?.taiKhoan });
-    const dataKhoaHoc: khoaHoc[] = layThongTinKhoaHoc.data;
-    setCoursesRegisted(dataKhoaHoc)
+    try {
+      const layThongTinKhoaHoc = await quanLyNguoiDungServices.getKhoaHocRegisted({ taiKhoan: isModalOpen?.taiKhoan });
+      const dataKhoaHoc: khoaHoc[] = layThongTinKhoaHoc.data;
+      setCoursesRegisted(dataKhoaHoc)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoadingTable(false)
+    }
   }
 
 
 
   const handleDeleteUser = async (value) => {
     try {
-      // const dataUser = {
-      //   taiKhoan: value?.TaiKhoan
-      // }
       const dataUser = value?.taiKhoan
       await quanLyNguoiDungServices.deleteUser(dataUser)
       toast.success("Xóa người dùng thành công!")
@@ -93,31 +107,57 @@ export const QuanLyNguoiDungAdmin = () => {
     setIsModalOpen({ isOpen: false, taiKhoan: null });
   };
 
+  const getCoursesNotRegister = async () => {
+    const layThongTinKhoaHoc = await quanLyNguoiDungServices.getKhoaHocChuaGhiDanh({ taiKhoan: isModalOpen?.taiKhoan });
+    const dataKhoaHoc: khoaHoc[] = layThongTinKhoaHoc.data;
+    setGetCourseNotRegisted(dataKhoaHoc)
+  }
+
   const handleConfirmCourse = async (value) => {
-    await khoaHocServices.ghiDanhKhoaHoc({
-      maKhoaHoc: value?.maKhoaHoc,
-      taiKhoan: isModalOpen.taiKhoan,
-    })
-    await getCoursesRegisted()
-    toast.success("Ghi danh thành công")
+    setLoadingTable(true)
+    try {
+      await khoaHocServices.ghiDanhKhoaHoc({
+        maKhoaHoc: value?.maKhoaHoc,
+        taiKhoan: isModalOpen.taiKhoan,
+      })
+      await getCoursesRegisted()
+      await getCourses()
+      toast.success("Xác thực thành công")
+    } catch (error) {
+      toast.error("Xác thực không thành công")
+    }
+
+
   }
 
   const handleCancelCourse = async (value) => {
-    await khoaHocServices.huyGhiDanh({
-      maKhoaHoc: value?.maKhoaHoc,
-      taiKhoan: isModalOpen.taiKhoan,
-    })
-    await getCoursesRegisted()
-    toast.success("Hủy ghi danh thành công")
+    setLoadingTable(true)
+    try {
+      await khoaHocServices.huyGhiDanh({
+        maKhoaHoc: value?.maKhoaHoc,
+        taiKhoan: isModalOpen.taiKhoan,
+      })
+      await getCoursesRegisted()
+      toast.success("Hủy thành công")
+    } catch (error) {
+      toast.error("Hủy không thành công")
+    }
+
   }
 
   const handleRegisterCourse = async () => {
-    await khoaHocServices.ghiDanhKhoaHoc({
-      maKhoaHoc: watch("search"),
-      taiKhoan: isModalOpen.taiKhoan,
-    })
-    await getCoursesRegisted()
-    toast.success("Ghi danh thành công")
+    setLoadingTable(true)
+    try {
+      await khoaHocServices.dangKyKhoaHoc({
+        maKhoaHoc: watch("search"),
+        taiKhoan: isModalOpen.taiKhoan,
+      })
+      await getCourses()
+      toast.success("Ghi danh thành công")
+    } catch (error) {
+      toast.error("Ghi danh không thành công")
+    }
+
   }
 
   const columns: ColumnsType<UserAdmin> = [
@@ -162,7 +202,7 @@ export const QuanLyNguoiDungAdmin = () => {
     },
   ];
 
-  const columnsGhidanh: ColumnsType<khoaHoc> = [
+  const columnsChuaGhidanh: ColumnsType<khoaHoc> = [
     {
       title: "STT",
       dataIndex: "stt",
@@ -181,6 +221,31 @@ export const QuanLyNguoiDungAdmin = () => {
         return <>
           <Space size="middle">
             <Tag color="success" style={{ cursor: "pointer" }} onClick={() => handleConfirmCourse(value)}>Xác thực</Tag>
+            <Tag color="warning" style={{ cursor: "pointer" }} onClick={() => handleCancelCourse(value)}>Hủy</Tag >
+          </Space >
+        </>
+      }
+    }
+  ]
+
+  const columnsGhidanh: ColumnsType<khoaHoc> = [
+    {
+      title: "STT",
+      dataIndex: "stt",
+      key: "stt",
+      render: (text, record, index) => <a>{index + 1}</a>,
+    },
+    {
+      title: "Tên khóa học",
+      dataIndex: "tenKhoaHoc",
+      key: "tenKhoaHoc",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (value) => {
+        return <>
+          <Space size="middle">
             <Tag color="warning" style={{ cursor: "pointer" }} onClick={() => handleCancelCourse(value)}>Hủy</Tag >
           </Space >
         </>
@@ -241,7 +306,7 @@ export const QuanLyNguoiDungAdmin = () => {
                   filterSort={(optionA, optionB) =>
                     (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
                   }
-                  options={courses.map(e => ({ value: e.maKhoaHoc, label: e.tenKhoaHoc }))}
+                  options={coursesNotRegisted.map(e => ({ value: e.maKhoaHoc, label: e.tenKhoaHoc }))}
                 />)}
             />
           </Col>
@@ -261,7 +326,7 @@ export const QuanLyNguoiDungAdmin = () => {
 
           </Col>
         </Row>
-        <Table columns={columnsGhidanh} dataSource={courses} rowKey={(record: khoaHoc) => record?.tenKhoaHoc} />
+        <Table columns={columnsChuaGhidanh} dataSource={courses} rowKey={(record: khoaHoc) => record?.tenKhoaHoc} loading={loadingTable} />
         <br />
         <Row>
           <Col span={14}>
@@ -271,7 +336,7 @@ export const QuanLyNguoiDungAdmin = () => {
           <Col span={8}>
           </Col>
         </Row>
-        <Table columns={columnsGhidanh} dataSource={coursesRegisted} rowKey={(record: khoaHoc) => record?.tenKhoaHoc} />
+        <Table columns={columnsGhidanh} dataSource={coursesRegisted} rowKey={(record: khoaHoc) => record?.tenKhoaHoc} loading={loadingTable} />
 
       </Modal>
     </>

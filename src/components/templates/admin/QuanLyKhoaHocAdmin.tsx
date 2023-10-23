@@ -4,7 +4,7 @@ import { getDanhMucKhoaHocThunk, getKhoaHocThunk } from "store/quanLyKhoaHoc";
 import { useSelector } from "react-redux";
 import { Col, Modal, Row, Select, Space, Table, Tag } from "antd";
 import { CategoryCourse, Course } from "types/QuanLyKhoaHoc";
-import { khoaHocServices } from "services";
+import { khoaHocServices, quanLyNguoiDungServices } from "services";
 import { handleError } from "utils";
 import Search from "antd/es/input/Search";
 import { toast } from "react-toastify";
@@ -17,6 +17,9 @@ import { useAuth } from "hooks";
 
 export const QuanLyKhoaHocAdmin = () => {
    const [open, setOpen] = useState(false);
+   const [listUserbyCourseId, setListUserbyCourseId] = useState([]);
+   const [listUserbyCourseIdXetDuyet, setListUserbyCourseIdXetDuyet] = useState([]);
+
    const [openGhiDanh, setOpenGhiDanh] = useState(false);
    const { user } = useAuth()
    const [titleModal, setTitleModal] = useState<string>('');
@@ -24,7 +27,6 @@ export const QuanLyKhoaHocAdmin = () => {
    const [editingCourse, setEditingCourse] = useState<Course | null>(null);
    // eslint-disable-next-line @typescript-eslint/no-explicit-any
    const handleEdit = (item: any) => {
-      console.log("item: ", item);
       // Lấy thông tin của khoá học cần chỉnh sửa
       setEditingCourse(item);
       reset({
@@ -145,7 +147,22 @@ export const QuanLyKhoaHocAdmin = () => {
          label: item?.tenDanhMuc,
       }
    ))
-
+   const [maKhoaHoc, setMaKhoaHoc] = useState()
+   const handleGhiDanh = async (item) => {
+      // console.log(item?.maKhoaHoc);
+      setMaKhoaHoc(item?.maKhoaHoc)
+      const dataBody = {
+         maKhoaHoc: item?.maKhoaHoc
+      }
+      try {
+         const data = await quanLyNguoiDungServices.getUsersByCourseIdChoXetDuyet(dataBody)
+         const data2 = await quanLyNguoiDungServices.getUsersByCourseId(dataBody)
+         setListUserbyCourseIdXetDuyet(data.data)
+         setListUserbyCourseId(data2.data)
+      } catch (error) {
+         return handleError(error)
+      }
+   }
    const hanleSearch = async () => {
       try {
          // call api search truyền vào inputSearch(state) khi nhấn 
@@ -183,7 +200,8 @@ export const QuanLyKhoaHocAdmin = () => {
          render: (item: Course) => (<>
             <Space size="middle">
                <Tag color="success" className="cursor-pointer"
-                  onClick={async () => {
+                  onClick={() => {
+                     handleGhiDanh(item)
                      setOpenGhiDanh(true)
                   }}
                >Ghi danh</Tag>
@@ -247,7 +265,61 @@ export const QuanLyKhoaHocAdmin = () => {
       dispatch(getDanhMucKhoaHocThunk())
 
    }, [setValue, dispatch, reset, user, currentDate])
+   const columnsGhidanh = [
+      {
+         title: "Tài khoản",
+         dataIndex: "taiKhoan",
+         key: "taiKhoan",
+         render: (text) => <a>{text}</a>,
+      },
+      {
+         title: "Họ tên",
+         dataIndex: "hoTen",
+         key: "hoTen",
+      },
+      {
+         title: "Action",
+         key: "action",
+         render: (item) => {
+            return <>
+               <Space size="middle">
+                  <Tag color="success" style={{ cursor: "pointer" }}
+                     onClick={async () => {
 
+                        const data = {
+                           maKhoaHoc: maKhoaHoc,
+                           taiKhoan: item?.taiKhoan
+                        }
+
+                        try {
+                           await khoaHocServices.ghiDanhKhoaHoc(data)
+                           setListUserbyCourseIdXetDuyet((pre)=>{
+                              return pre.filter((dataItem) => dataItem.taiKhoan !== item.taiKhoan)
+                           })
+                           
+                        } catch (error) {
+                           return handleError(error)
+                        }
+                     }}
+                  >Xác thực</Tag>
+                  <Tag color="red" style={{ cursor: "pointer" }}
+                     onClick={async () => {
+                        const huyGhiDanh = {
+                           maKhoaHoc: maKhoaHoc,
+                           taiKhoan: user?.taiKhoan
+                        }
+                        try {
+                           await khoaHocServices.huyGhiDanh(huyGhiDanh)
+                        } catch (error) {
+                           return handleError(error)
+                        }
+                     }}
+                  >Hủy</Tag >
+               </Space >
+            </>
+         }
+      }
+   ]
    return (
       <div className="p-5">
          <h2 className="text-2xl mb-5 font-600">Quản lý khóa học</h2>
@@ -264,7 +336,6 @@ export const QuanLyKhoaHocAdmin = () => {
                setValue("maNhom", "GP09");
                setTitleModal('Thêm khóa học mới')
                setOpen(true)
-
             }}>
             <i className="fa-solid fa-plus mr-4"></i> Thêm</Button>
          {/* Modal form add và edit  */}
@@ -333,7 +404,6 @@ export const QuanLyKhoaHocAdmin = () => {
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={12}>
                      <Controller
-
                         name="maDanhMucKhoaHoc"
                         control={control}
                         render={({ field: { onChange, value } }) => (
@@ -411,7 +481,38 @@ export const QuanLyKhoaHocAdmin = () => {
                setOpenGhiDanh(false)
             }}
             width={1200}
-         >Đây là modal ghi danh</Modal>
+         ><Row>
+               <Col span={18}>
+                  <Input placeholder="Tên người dùng"></Input>
+               </Col>
+               <Col span={1}></Col>
+               <Col span={4}>
+                  <Button>Ghi danh</Button>
+               </Col>
+            </Row>
+            <br />
+            <Row>
+               <Col span={14}>
+                  <h1>Học viên chờ xác thực</h1>
+               </Col>
+               <Col span={2}></Col>
+               <Col span={8}>
+                  <Input placeholder="Nhập tên hv hoặc sđt" />
+               </Col>
+            </Row>
+            <Table dataSource={listUserbyCourseIdXetDuyet} columns={columnsGhidanh} rowKey={(record) => record?.taiKhoan} />
+            <br />
+            <Row>
+               <Col span={14}>
+                  <h1>Học viên đã tham gia khóa học </h1>
+               </Col>
+               <Col span={2}></Col>
+               <Col span={8}>
+                  <Input placeholder="Nhập tên hv hoặc sđt" />
+               </Col>
+            </Row>
+            <Table dataSource={listUserbyCourseId} columns={columnsGhidanh} rowKey={(record) => record?.taiKhoan} />
+         </Modal>
          <Search
             placeholder="Search name"
             allowClear

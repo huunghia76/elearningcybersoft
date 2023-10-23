@@ -1,13 +1,17 @@
-import { Button, Col, Input, Modal, Row, Space, Table, Tag, theme } from "antd";
+import { Button, Col, Input, Modal, Row, Select, Space, Table, Tag, theme } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { quanLyNguoiDungServices } from "services";
-import { AdminGhidanh, UserAdmin } from "types";
-import { handleError } from "utils";
 import { toast } from 'react-toastify';
+import { khoaHocServices, quanLyNguoiDungServices } from "services";
+import { UserAdmin, khoaHoc } from "types";
+import { handleError } from "utils";
+import { Controller, useForm } from 'react-hook-form';
 
+type searchCourse = {
+  search: string
+}
 
 export const QuanLyNguoiDungAdmin = () => {
   const {
@@ -17,14 +21,29 @@ export const QuanLyNguoiDungAdmin = () => {
 
   const navigate = useNavigate();
   const [userList, setUserList] = useState<UserAdmin[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState({ isOpen: false, taiKhoan: null });
 
   const [searchUser, setSearchUser] = useState('')
   const dataUserList = userList?.filter(e => e.taiKhoan.toLowerCase().includes(searchUser?.toLowerCase()))
 
+  const [courses, setGetCourse] = useState<khoaHoc[]>([])
+  const [coursesRegisted, setCoursesRegisted] = useState<khoaHoc[]>([])
+
+  const {
+    control,
+    watch,
+  } = useForm<searchCourse>({
+    mode: "onChange",
+  });
+
   useEffect(() => {
     getUserList();
   }, []);
+
+  useEffect(() => {
+    getCourses()
+    getCoursesRegisted()
+  }, [isModalOpen.isOpen])
 
 
   const getUserList = async () => {
@@ -32,6 +51,20 @@ export const QuanLyNguoiDungAdmin = () => {
     const dataUsers: UserAdmin[] = quanLyNguoiDungResp.data;
     setUserList(dataUsers);
   };
+
+  const getCourses = async () => {
+    const layThongTinKhoaHoc = await quanLyNguoiDungServices.getKhoaHoc({ taiKhoan: isModalOpen?.taiKhoan });
+    const dataKhoaHoc: khoaHoc[] = layThongTinKhoaHoc.data;
+    setGetCourse(dataKhoaHoc)
+  }
+
+  const getCoursesRegisted = async () => {
+    const layThongTinKhoaHoc = await quanLyNguoiDungServices.getKhoaHocRegisted({ taiKhoan: isModalOpen?.taiKhoan });
+    const dataKhoaHoc: khoaHoc[] = layThongTinKhoaHoc.data;
+    setCoursesRegisted(dataKhoaHoc)
+  }
+
+
 
   const handleDeleteUser = async (value) => {
     try {
@@ -48,17 +81,44 @@ export const QuanLyNguoiDungAdmin = () => {
 
   }
 
-  const showModal = () => {
-    setIsModalOpen(true);
+  const showModal = (taiKhoan) => {
+    setIsModalOpen({ isOpen: true, taiKhoan });
   };
 
   const handleOk = () => {
-    setIsModalOpen(false);
+    setIsModalOpen({ isOpen: false, taiKhoan: null });
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsModalOpen({ isOpen: false, taiKhoan: null });
   };
+
+  const handleConfirmCourse = async (value) => {
+    await khoaHocServices.ghiDanhKhoaHoc({
+      maKhoaHoc: value?.maKhoaHoc,
+      taiKhoan: isModalOpen.taiKhoan,
+    })
+    await getCoursesRegisted()
+    toast.success("Ghi danh thành công")
+  }
+
+  const handleCancelCourse = async (value) => {
+    await khoaHocServices.huyGhiDanh({
+      maKhoaHoc: value?.maKhoaHoc,
+      taiKhoan: isModalOpen.taiKhoan,
+    })
+    await getCoursesRegisted()
+    toast.success("Hủy ghi danh thành công")
+  }
+
+  const handleRegisterCourse = async () => {
+    await khoaHocServices.ghiDanhKhoaHoc({
+      maKhoaHoc: watch("search"),
+      taiKhoan: isModalOpen.taiKhoan,
+    })
+    await getCoursesRegisted()
+    toast.success("Ghi danh thành công")
+  }
 
   const columns: ColumnsType<UserAdmin> = [
     {
@@ -93,7 +153,7 @@ export const QuanLyNguoiDungAdmin = () => {
       render: (value) => {
         return <>
           <Space size="middle">
-            <Tag color="success" style={{ cursor: "pointer" }} onClick={() => showModal()}>Ghi danh</Tag>
+            <Tag color="success" style={{ cursor: "pointer" }} onClick={() => showModal(value?.taiKhoan)}>Ghi danh</Tag>
             <Tag color="warning" style={{ cursor: "pointer" }} onClick={() => navigate(`/admin/user/add?taiKhoan=${value.taiKhoan}`)}>Sửa</Tag>
             <Tag color="error" style={{ cursor: "pointer" }} onClick={() => handleDeleteUser(value)}>Delete</Tag>
           </Space>
@@ -102,26 +162,26 @@ export const QuanLyNguoiDungAdmin = () => {
     },
   ];
 
-  const columnsGhidanh: ColumnsType<AdminGhidanh> = [
+  const columnsGhidanh: ColumnsType<khoaHoc> = [
     {
-      title: "Tài khoản",
-      dataIndex: "taiKhoan",
-      key: "taiKhoan",
-      render: (text) => <a>{text}</a>,
+      title: "STT",
+      dataIndex: "stt",
+      key: "stt",
+      render: (text, record, index) => <a>{index + 1}</a>,
     },
     {
-      title: "Họ tên",
-      dataIndex: "hoTen",
-      key: "hoTen",
+      title: "Tên khóa học",
+      dataIndex: "tenKhoaHoc",
+      key: "tenKhoaHoc",
     },
     {
       title: "Action",
       key: "action",
-      render: () => {
+      render: (value) => {
         return <>
           <Space size="middle">
-            <Tag color="success" style={{ cursor: "pointer" }}>Xác thực</Tag>
-            <Tag color="warning" style={{ cursor: "pointer" }}>Hủy</Tag >
+            <Tag color="success" style={{ cursor: "pointer" }} onClick={() => handleConfirmCourse(value)}>Xác thực</Tag>
+            <Tag color="warning" style={{ cursor: "pointer" }} onClick={() => handleCancelCourse(value)}>Hủy</Tag >
           </Space >
         </>
       }
@@ -129,6 +189,7 @@ export const QuanLyNguoiDungAdmin = () => {
   ]
 
   return (
+
     <>
       <h1
         style={{
@@ -150,7 +211,6 @@ export const QuanLyNguoiDungAdmin = () => {
         </Col>
         <Col span={1}></Col>
         <Col span={3}>
-          {/* <Button>Thêm</Button> */}
         </Col>
       </Row>
       <Content
@@ -163,42 +223,55 @@ export const QuanLyNguoiDungAdmin = () => {
       >
         <Table columns={columns} dataSource={dataUserList} rowKey={(record: UserAdmin) => record?.taiKhoan} />
       </Content>
-      {/* 
-      <Button type="primary" onClick={showModal}>
-        Open Modal
-      </Button> */}
-      <Modal title="Chọn người dùng" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
+      <Modal title="Chọn khóa học" open={isModalOpen.isOpen} onOk={handleOk} onCancel={handleCancel} >
         <Row>
           <Col span={18}>
-            <Input placeholder="Tên người dùng"></Input>
+            <Controller
+              name="search"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  showSearch
+                  style={{ width: 350 }}
+                  placeholder="Search to Select"
+                  optionFilterProp="children"
+                  value={value}
+                  onChange={onChange}
+                  filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                  }
+                  options={courses.map(e => ({ value: e.maKhoaHoc, label: e.tenKhoaHoc }))}
+                />)}
+            />
           </Col>
           <Col span={1}></Col>
           <Col span={4}>
-            <Button>Ghi danh</Button>
+            <Button onClick={handleRegisterCourse}>Ghi danh</Button>
           </Col>
         </Row>
         <br />
         <Row>
           <Col span={14}>
-            <h1>Học viên chờ xác thực</h1>
+            <h1>Khóa học chờ xác thực</h1>
           </Col>
-          <Col span={2}></Col>
+          <Col span={2}>
+          </Col>
           <Col span={8}>
-            <Input placeholder="Nhập tên hv hoặc sđt" />
+
           </Col>
         </Row>
-        <Table columns={columnsGhidanh} rowKey={(record: AdminGhidanh) => record?.taiKhoan} />
+        <Table columns={columnsGhidanh} dataSource={courses} rowKey={(record: khoaHoc) => record?.tenKhoaHoc} />
         <br />
         <Row>
           <Col span={14}>
-            <h1>Học viên đã tham gia khóa học </h1>
+            <h1>Khóa học đã ghi danh</h1>
           </Col>
           <Col span={2}></Col>
           <Col span={8}>
-            <Input placeholder="Nhập tên hv hoặc sđt" />
           </Col>
         </Row>
-        <Table columns={columnsGhidanh} rowKey={(record: AdminGhidanh) => record?.taiKhoan} />
+        <Table columns={columnsGhidanh} dataSource={coursesRegisted} rowKey={(record: khoaHoc) => record?.tenKhoaHoc} />
 
       </Modal>
     </>

@@ -14,6 +14,9 @@ export const khoaHocServices = {
    getKhoaHocById: (query = "") => api.get<any>(`/LayThongTinKhoaHoc?maKhoaHoc=${query}`),
    // eslint-disable-next-line @typescript-eslint/no-explicit-any
    dangKyKhoaHoc: (value) => api.post<DangKyKhoaHoc>(`/DangKyKhoaHoc`, value),
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   ghiDanhKhoaHoc: (value) => api.post<DangKyKhoaHoc>(`/GhiDanhKhoaHoc`, value),
+
    huyGhiDanh: (value) => api.post<DangKyKhoaHoc>(`/HuyGhiDanh`, value),
    // eslint-disable-next-line @typescript-eslint/no-explicit-any
    addCourse: (value) => api.post<any>(`/ThemKhoaHoc`, value),

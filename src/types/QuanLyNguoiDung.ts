@@ -1,12 +1,12 @@
 export type UserLogin = {
-   taiKhoan: string;
-   matKhau: string;
-   hoTen: string;
-   email: string;
-   soDT: string;
-   maNhom: string;
-   maLoaiNguoiDung: "GV" | "HV";
-   accessToken: string;
+  taiKhoan: string;
+  matKhau: string;
+  hoTen: string;
+  email: string;
+  soDT: string;
+  maNhom: string;
+  maLoaiNguoiDung: "GV" | "HV";
+  accessToken: string;
 };
 export type UserByAccessToken = Omit<UserLogin, "accessToken"> & {
   chiTietKhoaHocGhiDanh?:
@@ -71,4 +71,9 @@ export type khoaHoc = {
   tenKhoaHoc: string;
   biDanh: string;
   maKhoaHoc: string;
+};
+export type UserChuaGhiDanh = {
+  biDanh: string;
+  hoTen: string;
+  taiKhoan: string;
 };

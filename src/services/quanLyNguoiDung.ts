@@ -41,6 +41,9 @@ export const quanLyNguoiDungServices = {
   getKhoaHoc: (value: object) =>
     api.post<khoaHoc[]>(`/LayDanhSachKhoaHocChoXetDuyet`, value),
 
+  getKhoaHocChuaGhiDanh: (value: object) =>
+    api.post<khoaHoc[]>(`/LayDanhSachKhoaHocChuaGhiDanh`, value),
+
   getKhoaHocRegisted: (value: object) =>
     api.post<khoaHoc[]>(`/LayDanhSachKhoaHocDaXetDuyet`, value),
 };

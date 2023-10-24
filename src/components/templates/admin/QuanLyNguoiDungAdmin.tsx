@@ -207,12 +207,7 @@ export const QuanLyNguoiDungAdmin = () => {
       ];
 
       const columnsChuaGhidanh: ColumnsType<khoaHoc> = [
-         {
-            title: "STT",
-            dataIndex: "stt",
-            key: "stt",
-            render: (text, record, index) => <a>{index + 1}</a>,
-         },
+         
          {
             title: "Tên khóa học",
             dataIndex: "tenKhoaHoc",
@@ -233,12 +228,7 @@ export const QuanLyNguoiDungAdmin = () => {
       ]
 
       const columnsGhidanh: ColumnsType<khoaHoc> = [
-         {
-            title: "STT",
-            dataIndex: "stt",
-            key: "stt",
-            render: (text, record, index) => <a>{index + 1}</a>,
-         },
+        
          {
             title: "Tên khóa học",
             dataIndex: "tenKhoaHoc",

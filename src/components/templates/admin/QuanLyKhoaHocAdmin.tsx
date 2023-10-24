@@ -542,8 +542,7 @@ export const QuanLyKhoaHocAdmin = () => {
             centered
             open={openGhiDanh}
             onOk={() => {
-               document.getElementById('submitKhoaHoc').click()
-               setOpenGhiDanh(true)
+               setOpenGhiDanh(false)
             }}
             onCancel={() => {
                setOpenGhiDanh(false)

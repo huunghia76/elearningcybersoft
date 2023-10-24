@@ -35,7 +35,7 @@ export const quanLyNguoiDungServices = {
   
   getUsersByCourseId: (query) => api.post(`/LayDanhSachHocVienKhoaHoc`, query),
 
-  addUser: (data: RegisterSchAdminType) => api.put("/ThemNguoiDung", data),
+  addUser: (data: RegisterSchAdminType) => api.post("/ThemNguoiDung", data),
 
   getUser: (data) => api.get<UserAdmin[]>(`/TimKiemNguoiDung?tuKhoa=${data}`),
 

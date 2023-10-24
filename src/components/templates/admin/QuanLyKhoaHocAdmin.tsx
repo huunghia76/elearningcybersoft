@@ -13,7 +13,9 @@ import { CourseSchema, CourseSchemaType } from "schema";
 import { Controller, useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "hooks";
+import { UserChuaGhiDanh } from "types";
 
+const { Option } = Select;
 
 export const QuanLyKhoaHocAdmin = () => {
    const [open, setOpen] = useState(false);
@@ -53,6 +55,7 @@ export const QuanLyKhoaHocAdmin = () => {
       mode: "onChange",
       resolver: zodResolver(CourseSchema),
    });
+
    const onSubmit: SubmitHandler<CourseSchemaType> = async (values) => {
 
       if (editingCourse) {
@@ -149,8 +152,8 @@ export const QuanLyKhoaHocAdmin = () => {
    ))
    const [maKhoaHoc, setMaKhoaHoc] = useState()
    const handleGhiDanh = async (item) => {
-      // console.log(item?.maKhoaHoc);
       setMaKhoaHoc(item?.maKhoaHoc)
+
       const dataBody = {
          maKhoaHoc: item?.maKhoaHoc
       }
@@ -159,6 +162,10 @@ export const QuanLyKhoaHocAdmin = () => {
          const data2 = await quanLyNguoiDungServices.getUsersByCourseId(dataBody)
          setListUserbyCourseIdXetDuyet(data.data)
          setListUserbyCourseId(data2.data)
+
+         // lấy danh sách user chưa ghi danh
+         const newOptions = await quanLyNguoiDungServices.getUsersChuaGD({ maKhoaHoc: item?.maKhoaHoc })
+         setOptions(newOptions.data);
       } catch (error) {
          return handleError(error)
       }
@@ -248,6 +255,52 @@ export const QuanLyKhoaHocAdmin = () => {
       }
    ];
 
+   const [searchResults, setSearchResults] = useState([]);
+   const [searchResults2, setSearchResults2] = useState([]);
+   const handlSearchTable = (list, e) => {
+      const value = e.target.value;
+
+      if (list.length > 0) {
+         const data = list.filter((item) => {
+            return item.hoTen.toLowerCase().includes(value.toLowerCase())
+         });
+         setSearchResults(data)
+      }
+   }
+   const handlSearchTable2 = (list, e) => {
+      const value = e.target.value;
+
+
+      if (list.length > 0) {
+         const data = list.filter((item) => {
+            return item.hoTen.toLowerCase().includes(value.toLowerCase())
+         });
+
+         setSearchResults2(data)
+      }
+   }
+   const [selectedValue, setSelectedValue] = useState([]);
+   const [options, setOptions] = useState(undefined);
+
+   const handleSelectChange = (value) => {
+      setSelectedValue(value);
+   };
+   const handleInputChange = async (value) => {
+
+      // Simulate an API call to get matching options based on user input
+      // Replace this with your actual data fetching logic
+      try {
+
+         setOptions((pre) => {
+            if (pre) {
+               return pre.filter((a: UserChuaGhiDanh) => a.hoTen.toLowerCase().includes(value.toLowerCase()))
+            }
+         })
+      } catch (error) {
+         return handleError(error)
+      }
+   };
+
    const [selectedImage, setSelectedImage] = useState(null);
 
    const today = new Date();
@@ -285,7 +338,8 @@ export const QuanLyKhoaHocAdmin = () => {
                <Space size="middle">
                   <Tag color="success" style={{ cursor: "pointer" }}
                      onClick={async () => {
-
+                        setSearchResults([])
+                        setSearchResults2([])
                         const data = {
                            maKhoaHoc: maKhoaHoc,
                            taiKhoan: item?.taiKhoan
@@ -293,10 +347,15 @@ export const QuanLyKhoaHocAdmin = () => {
 
                         try {
                            await khoaHocServices.ghiDanhKhoaHoc(data)
-                           setListUserbyCourseIdXetDuyet((pre)=>{
+                           setListUserbyCourseIdXetDuyet((pre) => {
                               return pre.filter((dataItem) => dataItem.taiKhoan !== item.taiKhoan)
                            })
-                           
+                           const dataBody = {
+                              maKhoaHoc: maKhoaHoc
+                           }
+                           const dataUser = await quanLyNguoiDungServices.getUsersByCourseId(dataBody)
+                           setListUserbyCourseId(dataUser.data)
+
                         } catch (error) {
                            return handleError(error)
                         }
@@ -304,12 +363,18 @@ export const QuanLyKhoaHocAdmin = () => {
                   >Xác thực</Tag>
                   <Tag color="red" style={{ cursor: "pointer" }}
                      onClick={async () => {
+
                         const huyGhiDanh = {
                            maKhoaHoc: maKhoaHoc,
-                           taiKhoan: user?.taiKhoan
+                           taiKhoan: item?.taiKhoan
+                        }
+                        const dataBody = {
+                           maKhoaHoc: maKhoaHoc
                         }
                         try {
                            await khoaHocServices.huyGhiDanh(huyGhiDanh)
+                           const dataUser = await quanLyNguoiDungServices.getUsersByCourseId(dataBody)
+                           setListUserbyCourseId(dataUser.data)
                         } catch (error) {
                            return handleError(error)
                         }
@@ -344,6 +409,7 @@ export const QuanLyKhoaHocAdmin = () => {
             centered
             open={open}
             onOk={() => {
+
                document.getElementById('submitKhoaHoc').click()
                setOpen(true)
             }}
@@ -483,11 +549,44 @@ export const QuanLyKhoaHocAdmin = () => {
             width={1200}
          ><Row>
                <Col span={18}>
-                  <Input placeholder="Tên người dùng"></Input>
+                  <Select
+                     size="large"
+                     showSearch
+                     style={{ width: '100%' }}
+                     placeholder="Search to Select"
+                     filterOption={false}
+                     onSearch={handleInputChange}
+                     onChange={handleSelectChange}
+                     value={selectedValue}
+
+                  >
+                     {options?.map((user: UserChuaGhiDanh, index) => (
+                        <Option key={index} value={user?.taiKhoan}>
+                           {user?.hoTen}
+                        </Option>
+                     ))}
+                  </Select>
                </Col>
-               <Col span={1}></Col>
                <Col span={4}>
-                  <Button>Ghi danh</Button>
+                  <Button
+                     size="large"
+                     className="!mt-8"
+                     onClick={async () => {
+                        try {
+                           await khoaHocServices.ghiDanhKhoaHoc({ maKhoaHoc, taiKhoan: selectedValue })
+                           const dataBody = {
+                              maKhoaHoc: maKhoaHoc
+                           }
+                           const dataUser = await quanLyNguoiDungServices.getUsersByCourseId(dataBody)
+                           setListUserbyCourseId(dataUser.data)
+                           // lấy danh sách user chưa ghi danh
+                           const newOptions = await quanLyNguoiDungServices.getUsersChuaGD({ maKhoaHoc })
+                           setOptions(newOptions.data);
+                        } catch (error) {
+                           return handleError(error)
+                        }
+                     }}
+                  >Ghi danh</Button>
                </Col>
             </Row>
             <br />
@@ -497,10 +596,10 @@ export const QuanLyKhoaHocAdmin = () => {
                </Col>
                <Col span={2}></Col>
                <Col span={8}>
-                  <Input placeholder="Nhập tên hv hoặc sđt" />
+                  <Input onChange={(e) => { handlSearchTable(listUserbyCourseIdXetDuyet, e) }} placeholder="Nhập tên hv hoặc sđt" />
                </Col>
             </Row>
-            <Table dataSource={listUserbyCourseIdXetDuyet} columns={columnsGhidanh} rowKey={(record) => record?.taiKhoan} />
+            <Table dataSource={searchResults.length ? searchResults : listUserbyCourseIdXetDuyet} columns={columnsGhidanh} rowKey={(record) => record?.taiKhoan} />
             <br />
             <Row>
                <Col span={14}>
@@ -508,10 +607,10 @@ export const QuanLyKhoaHocAdmin = () => {
                </Col>
                <Col span={2}></Col>
                <Col span={8}>
-                  <Input placeholder="Nhập tên hv hoặc sđt" />
+                  <Input onChange={(e) => { handlSearchTable2(listUserbyCourseId, e) }} placeholder="Nhập tên hv hoặc sđt" />
                </Col>
             </Row>
-            <Table dataSource={listUserbyCourseId} columns={columnsGhidanh} rowKey={(record) => record?.taiKhoan} />
+            <Table dataSource={searchResults2.length ? searchResults2 : listUserbyCourseId} columns={columnsGhidanh} rowKey={(record) => record?.taiKhoan} />
          </Modal>
          <Search
             placeholder="Search name"
@@ -530,5 +629,3 @@ export const QuanLyKhoaHocAdmin = () => {
       </div>
    )
 }
-
-

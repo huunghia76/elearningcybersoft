@@ -29,7 +29,10 @@ export const quanLyNguoiDungServices = {
 
   getUsers: () => api.get<UserAdmin[]>("/LayDanhSachNguoiDung?MaNhom=GP01"),
 
+  getUsersChuaGD: (data) => api.post<string>("/LayDanhSachNguoiDungChuaGhiDanh", data),
+
   getUsersByCourseIdChoXetDuyet: (query) => api.post(`/LayDanhSachHocVienChoXetDuyet`, query),
+  
   getUsersByCourseId: (query) => api.post(`/LayDanhSachHocVienKhoaHoc`, query),
 
   addUser: (data: RegisterSchAdminType) => api.put("/ThemNguoiDung", data),

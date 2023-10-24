@@ -36,7 +36,7 @@ export const QuanLyKhoaHocAdmin = () => {
          luotXem: item?.luotXem + '',
          danhGia: '0' as string,
          taiKhoanNguoiTao: item?.nguoiTao?.taiKhoan,
-         maDanhMucKhoaHoc: item?.danhMucKhoaHoc?.maDanhMucKhoahoc
+         maDanhMucKhoaHoc: item?.danhMucKhoaHoc?.maDanhMucKhoahoc,
       });
 
       setTitleModal('Chỉnh sửa khoá học');

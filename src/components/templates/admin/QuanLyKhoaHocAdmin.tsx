@@ -336,7 +336,7 @@ export const QuanLyKhoaHocAdmin = () => {
          render: (item) => {
             return <>
                <Space size="middle">
-                  <Tag color="success" style={{ cursor: "pointer" }}
+                  <Tag className="xacthuc_tbn" color="success" style={{ cursor: "pointer" }}
                      onClick={async () => {
                         setSearchResults([])
                         setSearchResults2([])
@@ -375,6 +375,8 @@ export const QuanLyKhoaHocAdmin = () => {
                            await khoaHocServices.huyGhiDanh(huyGhiDanh)
                            const dataUser = await quanLyNguoiDungServices.getUsersByCourseId(dataBody)
                            setListUserbyCourseId(dataUser.data)
+                           const dataUserCXD = await quanLyNguoiDungServices.getUsersByCourseIdChoXetDuyet(dataBody)
+                           setListUserbyCourseIdXetDuyet(dataUserCXD.data)
                         } catch (error) {
                            return handleError(error)
                         }
@@ -610,7 +612,7 @@ export const QuanLyKhoaHocAdmin = () => {
                   <Input onChange={(e) => { handlSearchTable2(listUserbyCourseId, e) }} placeholder="Nhập tên hv hoặc sđt" />
                </Col>
             </Row>
-            <Table dataSource={searchResults2.length ? searchResults2 : listUserbyCourseId} columns={columnsGhidanh} rowKey={(record) => record?.taiKhoan} />
+            <Table dataSource={searchResults2.length ? searchResults2 : listUserbyCourseId} className="hide-xacthuc" columns={columnsGhidanh} rowKey={(record) => record?.taiKhoan} />
          </Modal>
          <Search
             placeholder="Search name"

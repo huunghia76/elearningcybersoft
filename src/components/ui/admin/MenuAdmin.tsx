@@ -35,6 +35,7 @@ export const MenuAdmin: React.FC = () => {
       getItem(`Chào ${user?.hoTen}`, "sub1", <UserOutlined />, [
          getItem("Cập nhật thông tin", "1"),
          getItem("Đăng xuất", "2"),
+         getItem("Trang chủ", "3"),
       ]),
    ];
    // const [theme, setTheme] = useState<MenuTheme>("light");
@@ -48,7 +49,9 @@ export const MenuAdmin: React.FC = () => {
          dispatch(quanLyNguoiDungActions.logOut());
          dispatch(getUserByAccessTokenThunk());
          navigate(PATH.login);
-      } else {
+      }else if (e.key === "3") {
+         navigate('/')
+      }else {
          navigate("/admin/user/update");
       }
       setCurrent(e.key);
@@ -84,6 +87,7 @@ export const MenuAdmin: React.FC = () => {
                items={items}
             />
          )}
+         
       </>
    );
 };

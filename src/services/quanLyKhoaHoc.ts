@@ -7,9 +7,9 @@ const api = apiInstance({
 });
 
 export const khoaHocServices = {
-   getKhoaHoc: (query = '') => api.get<Course[]>(`/LayDanhSachKhoaHoc?${query ? 'tenKhoaHoc=' + query + '&' : query}MaNhom=GP09`),
+   getKhoaHoc: (query = '') => api.get<Course[]>(`/LayDanhSachKhoaHoc?${query ? 'tenKhoaHoc=' + query + '&' : query}MaNhom=GP01`),
    getDanhMucKhoaHoc: () => api.get<CategoryCourse[]>(`/LayDanhMucKhoaHoc`),
-   getKhoaHocByDanhMuc: (query = "") => api.get<CategoryCourse[]>(`/LayKhoaHocTheoDanhMuc?${query ? 'maDanhMuc=' + query : ''}&MaNhom=GP09`),
+   getKhoaHocByDanhMuc: (query = "") => api.get<CategoryCourse[]>(`/LayKhoaHocTheoDanhMuc?${query ? 'maDanhMuc=' + query : ''}&MaNhom=GP01`),
    // eslint-disable-next-line @typescript-eslint/no-explicit-any
    getKhoaHocById: (query = "") => api.get<any>(`/LayThongTinKhoaHoc?maKhoaHoc=${query}`),
    // eslint-disable-next-line @typescript-eslint/no-explicit-any

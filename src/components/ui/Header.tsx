@@ -8,6 +8,7 @@ import { Button, Input } from ".";
 import { getUserByAccessTokenThunk, quanLyNguoiDungActions } from "store/quanLyNguoiDung";
 import { PATH } from "constant";
 import classNames from "classnames";
+import { toast } from "react-toastify";
 
 export const Header = () => {
    const navigate = useNavigate();
@@ -57,20 +58,21 @@ export const Header = () => {
                </h1>
 
                <ul className={`${styles.navMenu} ${isActive ? styles.active : ""}`}>
+
+                  <NavLink className="font-600 tracking-[.10em] p-4" to="/">
+                     Trang chủ
+                  </NavLink>
                   <NavLink className="font-600 tracking-[.10em] p-4" to="/">
                      Khóa Học
                   </NavLink>
                   <NavLink className="font-600 tracking-[.10em] p-4" to="/">
-                     Link
-                  </NavLink>
-                  <NavLink className="font-600 tracking-[.10em] p-4" to="/">
-                     Link
+                     Giới thiệu
                   </NavLink>
                   <NavLink
                      className="font-600 tracking-[.10em] p-4"
                      to="/client/Contact"
                   >
-                     CONTACT
+                     Liên Hệ
                   </NavLink>
                   <div className="flex ">
                      <Input
@@ -125,7 +127,34 @@ export const Header = () => {
                                  <hr className="my-16" />
                                  <p
                                     className="text-16 cursor-pointer"
-                                    onClick={() => navigate(PATH.courseAdmin + '?menu=course')}
+                                    onClick={() => {
+                                       console.log(user);
+                                       if (user.maLoaiNguoiDung === 'HV') {
+                                          toast.warn(`Đây là một trang web demo nên chúng tôi cung cấp tài khoản admin để bạn test nha!
+                                             tk: testadm mk: 12345
+                                             `, {
+                                             position: "top-center",
+                                             closeOnClick: true, // Tắt đóng khi click
+                                             autoClose: false,
+                                             closeButton: (
+                                                <button
+                                                   className='bg-yellow-500 text-white'
+                                                   onClick={async () => {
+                                                      // Xử lý xóa khi người dùng xác nhận
+                                                      toast.dismiss(); // Đóng Toast Confirm
+                                                   }}
+                                                >
+                                                   Xác nhận
+                                                </button>
+                                             ),
+                                          });
+
+                                       } else {
+                                          navigate(PATH.courseAdmin + '?menu=course')
+                                       }
+                                    }
+                                    }
+
                                  >
                                     Quản trị
                                  </p>
